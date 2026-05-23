@@ -16,6 +16,11 @@ Health check:
 curl http://localhost:4001/health
 ```
 
+## Backend Scripts
+
+ClickHouse setup SQL for optional demo usage analytics lives in
+`scripts/clickhouse/`.
+
 With `LABRADOR_DEV_AUTH_BYPASS=true`, a local client can connect to:
 
 ```txt
