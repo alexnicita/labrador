@@ -70,10 +70,8 @@ export function SessionShell({
             actors: data.actors,
             cursors: data.cursors,
             currentPermission: data.currentPermission,
-            document: data.document,
             kickoffMessage: data.kickoffMessage,
             messages: data.messages,
-            run: data.run,
           }}
           onCreateMessage={onCreateMessage}
           onReact={onReact}

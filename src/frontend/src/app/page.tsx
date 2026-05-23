@@ -1,6 +1,15 @@
-import { SessionShell } from "@/components/session/session-shell";
-import { sessionReplicaData } from "@/lib/session/mock-data";
+import { CollaborativeSessionRoom } from "@/components/session/collaborative-session-room";
+import { listDemoFeedRows } from "@/lib/demo-feed/db";
 
-export default function Home() {
-  return <SessionShell data={sessionReplicaData} />;
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const rows = await listDemoFeedRows();
+
+  return (
+    <CollaborativeSessionRoom
+      initialRows={rows}
+      realtimeWsUrl={process.env.NEXT_PUBLIC_REALTIME_WS_URL ?? ""}
+    />
+  );
 }

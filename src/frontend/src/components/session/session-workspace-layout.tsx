@@ -136,7 +136,7 @@ export function SessionWorkspaceLayout({
             </div>
           </header>
 
-          <div className="grid min-h-0 flex-1 overflow-hidden xl:grid-cols-[minmax(0,1fr)_330px] 2xl:grid-cols-[minmax(0,1fr)_350px]">
+          <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)] overflow-hidden xl:grid-cols-[minmax(0,1fr)_330px] 2xl:grid-cols-[minmax(0,1fr)_350px]">
             {main}
             <div className="hidden min-h-0 border-l border-[#e0e6ed] bg-[#fbfcfd] p-3 xl:block">
               {rightPanel}

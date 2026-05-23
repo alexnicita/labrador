@@ -1,5 +1,6 @@
 import { CornerDownRight, Eye, Smile, Sparkles, ThumbsUp, UserRound } from "lucide-react";
 
+import { MarkdownContent } from "@/components/session/markdown-content";
 import type { Actor, Comment, CommentReaction } from "@/lib/session/types";
 import { cn } from "@/lib/utils";
 
@@ -29,16 +30,26 @@ function reactionIcon(kind: CommentReaction["kind"]) {
   return <Smile className="size-3.5 text-[#6d7480]" aria-hidden="true" />;
 }
 
+const reactionKinds: CommentReaction["kind"][] = [
+  "thumbs_up",
+  "smile",
+  "sparkles",
+  "eyes",
+];
+
 export function CommentCard({
   comment,
   actors,
   onReact,
 }: CommentCardProps) {
   const actor = findActor(actors, comment.actorId);
+  const reactionCounts = new Map(
+    comment.reactions.map((reaction) => [reaction.kind, reaction.count ?? 0]),
+  );
 
   return (
-    <article className="rounded-[14px] bg-white p-3.5 shadow-[0_0_0_1px_rgba(213,221,231,0.85)]">
-      <div className="flex items-start gap-3">
+    <article className="min-w-0 rounded-[14px] bg-white p-3.5 shadow-[0_0_0_1px_rgba(213,221,231,0.85)]">
+      <div className="flex min-w-0 items-start gap-3">
         <div
           className={cn(
             "grid size-8 shrink-0 place-items-center rounded-full text-[12px] font-bold",
@@ -59,37 +70,36 @@ export function CommentCard({
               {actor.roleLabel}
             </span>
           </div>
-          <p className="mt-2 text-[13px] leading-5 text-[#151922]">{comment.body}</p>
+          <MarkdownContent
+            className="mt-2 text-[13px] leading-5 text-[#151922]"
+          >
+            {comment.body}
+          </MarkdownContent>
 
-          {comment.reactions.length > 0 ? (
-            <div className="mt-4 flex items-center gap-2">
-              {comment.reactions.map((reaction) => (
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            {reactionKinds.map((reactionKind) => {
+              const count = reactionCounts.get(reactionKind) ?? 0;
+
+              return (
                 <button
                   type="button"
                   className="inline-flex h-8 items-center gap-1.5 rounded-full border border-[#e4e9ef] bg-white px-2.5 text-[12px] font-semibold text-[#2b3340] hover:bg-[#f7f9fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
-                  key={reaction.id}
-                  aria-label={`React with ${reaction.kind.replaceAll("_", " ")}`}
-                  {...(onReact ? { onClick: () => onReact(reaction.kind) } : {})}
+                  key={reactionKind}
+                  aria-label={`React with ${reactionKind.replaceAll("_", " ")}`}
+                  {...(onReact ? { onClick: () => onReact(reactionKind) } : {})}
                 >
-                  {reactionIcon(reaction.kind)}
-                  {reaction.count ? <span>{reaction.count}</span> : null}
+                  {reactionIcon(reactionKind)}
+                  {count > 0 ? <span>{count}</span> : null}
                 </button>
-              ))}
-              <button
-                type="button"
-                className="ml-auto text-[12px] font-semibold text-[#687385] hover:text-[#111318] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
-              >
-                Reply
-              </button>
-            </div>
-          ) : (
+              );
+            })}
             <button
               type="button"
-              className="mt-4 text-[12px] font-semibold text-[#687385] hover:text-[#111318] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+              className="ml-auto text-[12px] font-semibold text-[#687385] hover:text-[#111318] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
             >
               Reply
             </button>
-          )}
+          </div>
 
           {comment.replies?.length ? (
             <div className="mt-4 space-y-3 border-t border-[#edf1f5] pt-3">
@@ -112,9 +122,9 @@ export function CommentCard({
                           {replyActor.roleLabel}
                         </span>
                       </div>
-                      <p className="mt-1.5 text-[13px] leading-5 text-[#222936]">
+                      <MarkdownContent className="mt-1.5 text-[13px] leading-5 text-[#222936]">
                         {reply.body}
-                      </p>
+                      </MarkdownContent>
                     </div>
                   </div>
                 );

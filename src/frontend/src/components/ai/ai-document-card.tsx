@@ -31,18 +31,17 @@ export function AIDocumentCard({ document }: AIDocumentCardProps) {
       <section className="mt-4">
         <div className="flex items-baseline gap-3">
           <span className="font-mono text-[17px] font-semibold text-[#111318]">1.</span>
-          <h3 className="text-[18px] font-bold text-[#111318]">Objective</h3>
+          <h3 className="text-[18px] font-bold text-[#111318]">Room goal</h3>
         </div>
         <p className="mt-2 max-w-[820px] text-[14px] leading-6 text-[#111827]">
-          Generate strong market awareness and drive qualified sign-ups that convert into
-          active users.
+          Turn shared prompts, comments, and AI replies into useful team insight.
         </p>
       </section>
 
       <section className="mt-4">
         <div className="flex items-baseline gap-3">
           <span className="font-mono text-[17px] font-semibold text-[#111318]">2.</span>
-          <h3 className="text-[18px] font-bold text-[#111318]">Target Audience</h3>
+          <h3 className="text-[18px] font-bold text-[#111318]">Participants</h3>
         </div>
         <div className="mt-3">
           <TargetAudienceTable rows={document.targetAudience} />
@@ -52,7 +51,7 @@ export function AIDocumentCard({ document }: AIDocumentCardProps) {
       <section className="mt-4">
         <div className="mb-3 flex items-baseline gap-3">
           <span className="font-mono text-[17px] font-semibold text-[#111318]">3.</span>
-          <h3 className="text-[18px] font-bold text-[#111318]">Messaging Pillars</h3>
+          <h3 className="text-[18px] font-bold text-[#111318]">Collaboration modes</h3>
         </div>
         <MessagingPillarCards pillars={document.pillars} />
       </section>

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type KeyboardEvent } from "react";
 import { SendHorizontal, Smile } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import type { PermissionState } from "@/lib/session/types";
 
 type CommentComposerProps = {
@@ -28,15 +28,25 @@ export function CommentComposer({ permission, onSubmit }: CommentComposerProps) 
     setComment("");
   }
 
+  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== "Enter" || event.shiftKey) {
+      return;
+    }
+
+    event.preventDefault();
+    event.currentTarget.form?.requestSubmit();
+  }
+
   return (
     <form className="border-t border-[#e6ebf1] bg-white p-3" onSubmit={handleSubmit}>
-      <div className="flex h-12 items-center gap-2 rounded-[10px] border border-[#e0e6ed] bg-white px-3 shadow-[0_1px_0_rgba(13,18,28,0.02)]">
-        <Input
+      <div className="flex min-h-12 items-end gap-2 rounded-[10px] border border-[#e0e6ed] bg-white px-3 py-2 shadow-[0_1px_0_rgba(13,18,28,0.02)]">
+        <Textarea
           value={comment}
           disabled={disabled}
           onChange={(event) => setComment(event.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder={disabled ? "Commenting is unavailable" : "Add a comment..."}
-          className="h-8 flex-1 border-0 bg-transparent px-0 text-[13px] shadow-none focus-visible:ring-0 disabled:bg-transparent disabled:opacity-100"
+          className="max-h-28 min-h-8 flex-1 resize-none border-0 bg-transparent px-0 py-1 text-[13px] leading-5 shadow-none focus-visible:ring-0 disabled:bg-transparent disabled:opacity-100"
           aria-label="Add a comment"
         />
         <Button

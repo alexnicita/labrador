@@ -9,7 +9,7 @@ type CollaboratorCursorProps = {
 export function CollaboratorCursor({ cursor }: CollaboratorCursorProps) {
   return (
     <div
-      className="pointer-events-none absolute z-20 hidden translate-x-[-8px] translate-y-[-6px] opacity-75 lg:block"
+      className="pointer-events-none fixed z-50 hidden translate-x-[-8px] translate-y-[-6px] opacity-75 lg:block"
       style={{ top: cursor.top, left: cursor.left, color: cursor.color }}
       aria-hidden="true"
     >

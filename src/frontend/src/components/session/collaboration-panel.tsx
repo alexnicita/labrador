@@ -2,6 +2,7 @@ import { ChevronDown, X } from "lucide-react";
 
 import { CommentCard } from "@/components/session/comment-card";
 import { CommentComposer } from "@/components/session/comment-composer";
+import { MarkdownPreview } from "@/components/session/markdown-content";
 import {
   Tabs,
   TabsContent,
@@ -85,9 +86,9 @@ export function CollaborationPanel({
                   <p className="text-[11px] font-semibold uppercase text-[#60708a]">
                     Commenting on
                   </p>
-                  <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-[#1d2633]">
+                  <MarkdownPreview className="mt-1 line-clamp-2 text-[13px] leading-5 text-[#1d2633]">
                     {data.selectedMessage.body}
-                  </p>
+                  </MarkdownPreview>
                 </div>
               ) : null}
 
