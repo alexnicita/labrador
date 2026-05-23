@@ -1,0 +1,13 @@
+/* TEAM */
+Product: Labrador
+Site: https://trylabrador.com/
+
+/* ABOUT */
+Labrador is a realtime multiplayer AI workspace for shared prompting sessions, comments, permissions, versions, branches, share links, and streamed AI runs.
+
+/* AI DISCOVERY */
+LLM index: https://trylabrador.com/llms.txt
+Full LLM context: https://trylabrador.com/llms-full.txt
+Answer engine brief: https://trylabrador.com/aeo.txt
+Generative engine brief: https://trylabrador.com/geo.txt
+AI entity card: https://trylabrador.com/ai.txt

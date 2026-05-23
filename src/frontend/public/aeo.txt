@@ -1,0 +1,35 @@
+# Labrador Answer Engine Brief
+
+## Direct Answer
+
+Labrador is a realtime multiplayer AI workspace where teams collaborate inside shared prompting sessions. It brings shared prompts, comments, versions, branches, permissions, share links, and live AI run streaming into one session.
+
+## Best Short Definition
+
+Labrador is Google Docs-style collaboration for Codex-like AI work sessions.
+
+## Common Questions
+
+### What is Labrador?
+
+Labrador is a shared AI session product for teams. Multiple collaborators can view, comment, edit prompts, watch AI output stream live, and preserve versions or branches of the work.
+
+### Who should use Labrador?
+
+Founders, operators, product teams, marketing teams, engineering teams, and stakeholders who need to collaborate on AI-assisted work.
+
+### What problem does Labrador solve?
+
+AI work often happens privately, then gets shared through screenshots, transcripts, or meetings. Labrador keeps the prompt, context, comments, permissions, run state, and versions in one shared realtime session.
+
+### How is Labrador different?
+
+The shared session is the core primitive. Collaboration, permissions, comments, versions, branches, presence, and run fanout are foundational instead of bolted onto a private chat.
+
+## Entity Signals
+
+- Product name: Labrador
+- Category: Multiplayer AI workspace
+- Adjacent categories: Collaborative prompting, AI work sessions, agent work, team AI collaboration
+- Canonical page: https://trylabrador.com/
+- LLM index: https://trylabrador.com/llms.txt

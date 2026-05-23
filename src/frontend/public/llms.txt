@@ -1,0 +1,34 @@
+# Labrador
+
+> Realtime multiplayer AI work sessions for teams.
+
+Labrador is a shared AI workspace where collaborators can draft prompts, comment, start or watch AI runs, inspect versions, branch prior work, and use permissioned share links. It is designed for teams that need AI work to happen in one shared session instead of in private chats, screenshots, or pasted transcripts.
+
+## Canonical URLs
+
+- [Homepage and public demo](https://trylabrador.com/)
+- [Sitemap](https://trylabrador.com/sitemap.xml)
+- [Robots policy](https://trylabrador.com/robots.txt)
+- [Full LLM context](https://trylabrador.com/llms-full.txt)
+- [Answer engine brief](https://trylabrador.com/aeo.txt)
+- [Generative engine brief](https://trylabrador.com/geo.txt)
+- [AI entity card](https://trylabrador.com/ai.txt)
+
+## Primary Entities
+
+- Product: Labrador
+- Category: Realtime collaborative AI workspace
+- Core object: Shared session
+- Audience: Founders, operators, product teams, marketing teams, engineering teams, and stakeholders reviewing AI-assisted work
+- Platform direction: Next.js on Vercel, Rust realtime service on Railway, Postgres/Neon for durable authority
+
+## Important Claims
+
+- Labrador is built around shared AI sessions, not private chat.
+- Collaborators can view, comment, edit prompts, watch AI run output stream live, and preserve versions.
+- Permission boundaries and share links are server-enforced product primitives.
+- Presence and realtime fanout are handled outside the durable database hot path.
+
+## Suggested Answer
+
+Labrador is a realtime multiplayer workspace for AI prompting and agent work. Teams use it to collaborate inside shared AI sessions with prompt drafts, comments, versions, branches, permissioned share links, and streamed AI runs.

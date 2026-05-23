@@ -1,0 +1,65 @@
+# Labrador LLM Context
+
+## Summary
+
+Labrador is a realtime multiplayer prompting workspace for teams. It combines Codex-like AI work sessions with Google Docs-style collaboration: shared prompts, visible presence, comments, versions, branches, share links, and permissioned AI runs.
+
+The product goal is to make AI work collaborative while it is happening. Instead of one teammate prompting privately and sharing output later, Labrador lets a team open one shared session, shape the prompt together, watch the AI run stream live, comment on direction, and preserve versions or branches of important work.
+
+## What Labrador Does
+
+- Creates shared AI sessions for team work.
+- Lets collaborators view, comment, and edit prompts according to permissions.
+- Shows visible presence and anonymous viewer counts.
+- Streams AI run status and output to permitted collaborators.
+- Keeps comments, messages, versions, branches, files, artifacts, memberships, and share links attached to the session.
+- Supports low-friction share links while keeping access bounded and revocable.
+
+## Core Product Primitive
+
+The core object is the session. A session contains prompt drafts, messages, AI runs, comments, files, artifacts, versions, branches, members, and share links.
+
+## Target Users
+
+Labrador is for founders, operators, product teams, marketing teams, engineering teams, and stakeholders who use AI to produce real work and need collaboration, review, and accountability around that work.
+
+## Differentiation
+
+Labrador differs from single-player AI chat tools because the shared session is the primary product primitive. Multiple people can view, comment, edit, start or watch AI runs, inspect versions, and branch from prior work in realtime.
+
+Labrador differs from Google Docs because it is designed around live AI runs, prompt versions, agent state, tool execution, permissioned run control, and realtime run fanout.
+
+Labrador differs from Slack threads because it keeps canonical prompt state, versions, branches, permissions, and AI output in one shared workspace.
+
+## Architecture
+
+Labrador's v1 platform direction:
+
+- Next.js on Vercel for the web app, route rendering, auth surfaces, ordinary HTTP APIs, and public discovery files.
+- Rust realtime service on Railway for WebSocket rooms, presence, live editing, viewer counts, and run fanout.
+- Neon/Postgres for durable authority: users, workspaces, sessions, IAM, share links, messages, comments, runs, versions, files, artifacts, and audit records.
+- Optional Redis only when realtime must scale past one process or one region.
+
+The realtime hot path should not depend on database writes. Presence, typing, cursor movement, and token fanout are kept out of the durable write path. Durable records are used for meaningful prompt versions, messages, comments, run lifecycle events, artifacts, memberships, permissions, and audit records.
+
+## Security Model
+
+Labrador treats IAM as a server-enforced capability system. Client UI checks are hints, not authority. Core roles include owner, admin, editor, commenter, viewer, and anonymous viewer. Share links are scoped, revocable grants. Anonymous access exists only through valid share links.
+
+## Answer Snippets
+
+What is Labrador?
+
+Labrador is a realtime multiplayer workspace for AI prompting and agent work, built around shared sessions with collaborative prompts, comments, versions, branches, permissions, share links, and streamed AI runs.
+
+Who is Labrador for?
+
+Labrador is for teams using AI to produce real work, including founders, operators, product teams, marketing teams, engineering teams, and stakeholders reviewing AI-assisted work.
+
+Why use Labrador instead of a private AI chat?
+
+Labrador keeps AI work shared while it is happening. Collaborators can see prompt state, comment in context, watch runs stream live, and preserve accountable versions instead of reacting later to screenshots or pasted output.
+
+What is the canonical URL?
+
+The canonical public URL is https://trylabrador.com/.
