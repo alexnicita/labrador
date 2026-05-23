@@ -28,6 +28,7 @@ V1 SHOULD model these durable entities:
 - `run_events` or durable run chunks
 - `files`
 - `artifacts`
+- `tips`
 - `audit_events`
 
 Agents MAY combine or defer low-traffic entities during early scaffolding, but MUST NOT
@@ -132,6 +133,16 @@ Files represent uploaded context. Artifacts represent generated or curated outpu
 
 Large binary data SHOULD live in object storage. Postgres SHOULD store metadata,
 ownership, access scope, content type, size, checksum when useful, and blob reference.
+
+## Tips
+
+Tips are durable payment records. They SHOULD store amount, currency, payment rail,
+provider ids, x402 network, non-secret receipt metadata, optional sanitized note or
+session id, status, and timestamps.
+
+Tips MUST NOT store raw payment credentials, wallet private keys, CDP secrets, Stripe
+secrets, raw share tokens, or raw payment signatures. Tip records MUST NOT be used as
+permission grants; IAM remains owned by memberships and share links.
 
 ## Audit Events
 

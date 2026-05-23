@@ -41,6 +41,15 @@ A session is the primary collaboration room. It owns:
 
 Sessions MUST have stable ids. Share URLs SHOULD resolve to sessions.
 
+## Tip
+
+A tip is a voluntary payment record supporting Labrador. Tips MAY be initiated by humans
+through Stripe Checkout or by agents through x402.
+
+Tips MUST NOT grant session permissions, paid access, elevated capabilities, quota, or
+run priority. They are payment records only. Any UI or API copy around tips SHOULD make
+clear that Labrador access is still governed by IAM, memberships, and share grants.
+
 ## Prompt Draft
 
 A prompt draft is the editable instruction or request that collaborators shape before or
@@ -119,4 +128,3 @@ A viewer is an active connection with `session.view`. Viewers may be:
 - Anonymous viewers counted as aggregate.
 
 The product MUST distinguish visible viewer identity from anonymous viewer count.
-

@@ -46,6 +46,18 @@ The realtime hot path should not depend on database writes. Presence, typing, cu
 
 Labrador treats IAM as a server-enforced capability system. Client UI checks are hints, not authority. Core roles include owner, admin, editor, commenter, viewer, and anonymous viewer. Share links are scoped, revocable grants. Anonymous access exists only through valid share links.
 
+## Tips And Agent Payments
+
+Labrador supports voluntary tips. Humans can use Stripe-hosted checkout through
+`POST https://trylabrador.com/api/tips/checkout` with `amountCents` of `100`, `500`, or
+`2000`. The response returns a Stripe payment URL.
+
+x402 agent tips are not advertised in the live Stripe-only hackathon build.
+
+Tips do not unlock access, permissions, capabilities, quota, run priority, or paid
+features. Labrador access remains controlled by memberships, capabilities, and share
+grants.
+
 ## Answer Snippets
 
 What is Labrador?

@@ -26,6 +26,10 @@ AI work often happens privately, then gets shared through screenshots, transcrip
 
 The shared session is the core primitive. Collaboration, permissions, comments, versions, branches, presence, and run fanout are foundational instead of bolted onto a private chat.
 
+### Can people tip Labrador?
+
+Yes. Humans can send voluntary tips with Stripe-hosted checkout through `POST https://trylabrador.com/api/tips/checkout` using `amountCents` of `100`, `500`, or `2000`. Tips do not grant access or paid features.
+
 ## Entity Signals
 
 - Product name: Labrador

@@ -3,6 +3,7 @@
 import { MoreHorizontal, Settings, Shield, SquarePen } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { TipLabradorButton } from "@/components/session/tip-labrador-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +29,8 @@ export function SessionOverflowMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>Session options</DropdownMenuLabel>
+        <TipLabradorButton trigger="menu-item" />
+        <DropdownMenuSeparator className="sm:hidden" />
         <DropdownMenuItem>
           <SquarePen className="size-4" aria-hidden="true" />
           Rename session

@@ -28,6 +28,14 @@ Labrador is a shared AI workspace where collaborators can draft prompts, comment
 - Collaborators can view, comment, edit prompts, watch AI run output stream live, and preserve versions.
 - Permission boundaries and share links are server-enforced product primitives.
 - Presence and realtime fanout are handled outside the durable database hot path.
+- Labrador accepts voluntary tips through Stripe-hosted checkout.
+- Tips never unlock access, permissions, capabilities, quota, or paid features.
+
+## Tips
+
+- Public tip config: https://trylabrador.com/api/tips/config
+- Human checkout: POST https://trylabrador.com/api/tips/checkout with `amountCents` of `100`, `500`, or `2000`; the response contains a Stripe Checkout URL.
+- x402 agent tips are not advertised in the live Stripe-only hackathon build.
 
 ## Suggested Answer
 

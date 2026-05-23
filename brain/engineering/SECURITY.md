@@ -160,3 +160,16 @@ V1 MUST include a rate-limit plan for:
 - Failed auth attempts.
 
 Rate limiting MAY use Upstash Redis or another simple shared store when deployed.
+
+## Tips And Payment Rails
+
+Tips are public to initiate but server-validated. A tip MUST NOT create or change any
+Labrador capability, role, membership, share link, run limit, or paid-access state.
+
+Tip routes MUST validate supported amounts on the server, rate-limit requests, and store
+only durable non-secret payment metadata. Stripe secret keys, webhook secrets, CDP API
+keys, wallet credentials, raw payment signatures, and private keys MUST stay in server-only
+deploy secrets and MUST NOT appear in client bundles, public docs, or committed files.
+
+Stripe webhooks MUST verify signatures before updating tip records. x402 endpoints MUST
+use facilitator verification and settlement before treating an agent payment as paid.

@@ -5,7 +5,8 @@ type RateLimitAction =
   | "token"
   | "ai"
   | "search"
-  | "analytics";
+  | "analytics"
+  | "tip";
 
 const actionLimits: Record<RateLimitAction, number> = {
   message: 12,
@@ -15,6 +16,7 @@ const actionLimits: Record<RateLimitAction, number> = {
   ai: 3,
   search: 5,
   analytics: 8,
+  tip: 8,
 };
 
 export async function checkDemoRateLimit(actorId: string, action: RateLimitAction) {

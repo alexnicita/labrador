@@ -5,6 +5,7 @@ import { PresenceCluster } from "@/components/session/presence-cluster";
 import { SessionOverflowMenu } from "@/components/session/session-overflow-menu";
 import { ShareSessionButton } from "@/components/session/share-session-button";
 import { SessionWorkspaceLayout } from "@/components/session/session-workspace-layout";
+import { TipLabradorButton } from "@/components/session/tip-labrador-button";
 import type { CommentReaction, SessionReplicaData } from "@/lib/session/types";
 
 type SessionShellProps = {
@@ -92,6 +93,7 @@ export function SessionShell({
         />
       }
       shareControl={<ShareSessionButton />}
+      tipControl={<TipLabradorButton />}
       overflowControl={<SessionOverflowMenu />}
     />
   );

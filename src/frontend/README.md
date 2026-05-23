@@ -29,6 +29,14 @@ Required for the public demo:
   `.env.local`; never commit it.
 - `REALTIME_AUTH_JWT_SECRET`: shared secret used to mint realtime room JWTs.
 
+Required for tips:
+
+- `STRIPE_TIP_PRICE_100`, `STRIPE_TIP_PRICE_500`, and `STRIPE_TIP_PRICE_2000`:
+  one-time USD Stripe Price ids for the `$1`, `$5`, and `$20` tip buttons.
+- `STRIPE_TIP_LINK_100`, `STRIPE_TIP_LINK_500`, and `STRIPE_TIP_LINK_2000`:
+  Stripe Payment Link URLs used as the live fallback when no server Stripe key is
+  configured.
+
 Optional:
 
 - `OPENAI_MODEL`: defaults to `gpt-5.4-mini`.
@@ -47,6 +55,13 @@ Optional:
   browser WebSocket joins for live presence and fanout.
 - `REALTIME_SERVICE_URL` and `REALTIME_PUBLISH_SECRET`: let the Next.js API publish
   committed events into the Rust realtime service.
+- `STRIPE_SECRET_KEY`: server-only Stripe key for API-created Checkout Sessions.
+- `STRIPE_WEBHOOK_SECRET`: webhook signing secret for `/api/stripe/webhook`.
+- `CDP_API_KEY_ID` and `CDP_API_KEY_SECRET`: server-only CDP credentials for the
+  x402 facilitator.
+- `X402_FACILITATOR_URL`: defaults to
+  `https://api.cdp.coinbase.com/platform/v2/x402`.
+- `X402_NETWORK`: defaults to `eip155:8453` for Base mainnet.
 
 ## Boundaries
 

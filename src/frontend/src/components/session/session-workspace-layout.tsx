@@ -28,6 +28,7 @@ type SessionWorkspaceLayoutProps = {
   rightPanel: ReactNode;
   presence: ReactNode;
   shareControl: ReactNode;
+  tipControl: ReactNode;
   overflowControl: ReactNode;
 };
 
@@ -42,6 +43,7 @@ export function SessionWorkspaceLayout({
   rightPanel,
   presence,
   shareControl,
+  tipControl,
   overflowControl,
 }: SessionWorkspaceLayoutProps) {
   return (
@@ -132,6 +134,7 @@ export function SessionWorkspaceLayout({
               </Sheet>
 
               <div className="hidden sm:block">{shareControl}</div>
+              <div className="hidden sm:block">{tipControl}</div>
               {overflowControl}
             </div>
           </header>

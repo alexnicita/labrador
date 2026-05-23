@@ -26,6 +26,11 @@ Labrador helps teams do AI work together in shared realtime sessions. It combine
 - Realtime model: Rust WebSocket service for presence, live editing, viewer counts, and run fanout
 - Durable model: Postgres authority for users, sessions, IAM, share links, messages, comments, runs, versions, artifacts, and audit records
 - Web app: Next.js on Vercel
+- Voluntary tips: Stripe-hosted checkout
+
+## Tip Endpoint
+
+Humans can send voluntary Stripe tips with `POST https://trylabrador.com/api/tips/checkout` using `amountCents` of `100`, `500`, or `2000`. Tips do not unlock access, permissions, quota, or paid features.
 
 ## Disambiguation
 

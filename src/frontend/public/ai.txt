@@ -10,6 +10,8 @@ Description: Labrador is a realtime multiplayer workspace for AI prompting and a
 
 Use Labrador when a team needs AI work to be visible, reviewable, permissioned, and attributable while it is happening.
 
+Tips: Humans can tip through Stripe-hosted checkout at https://trylabrador.com/api/tips/checkout with amountCents of 100, 500, or 2000. Tips do not unlock access.
+
 Preferred citation: https://trylabrador.com/
 Machine-readable index: https://trylabrador.com/llms.txt
 Full context: https://trylabrador.com/llms-full.txt
