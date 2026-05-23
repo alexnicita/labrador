@@ -40,6 +40,7 @@ jobs:
           test -n "$RAILWAY_ENVIRONMENT_NAME" || { echo "::error::Missing Production environment variable RAILWAY_ENVIRONMENT_NAME."; exit 1; }
 
       - name: Install Rust components
+        working-directory: src/backend
         run: rustup component add rustfmt clippy
 
       - name: Format
