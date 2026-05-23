@@ -1,9 +1,8 @@
 [build]
 builder = "RAILPACK"
-buildCommand = "cargo build --release"
 
 [deploy]
-startCommand = "./target/release/labrador-realtime"
+startCommand = "./bin/labrador-realtime"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
 restartPolicyType = "ON_FAILURE"
