@@ -8,5 +8,5 @@ Read `AGENTS.md` and the files in `brain/` before changing implementation detail
 ## Current Layout
 
 - `src/frontend`: Next.js App Router app for Vercel.
-- `src/backend`: future Rust realtime WebSocket service for Railway.
+- `src/backend`: Rust realtime WebSocket service for Railway.
 - `brain`: normative implementation instructions for coding agents.

@@ -1,0 +1,72 @@
+name: Backend Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/backend/**"
+      - ".github/workflows/backend-deploy.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy realtime service
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      RAILWAY_PROJECT_ID: ${{ vars.RAILWAY_PROJECT_ID }}
+      RAILWAY_SERVICE_ID: ${{ vars.RAILWAY_SERVICE_ID }}
+      RAILWAY_ENVIRONMENT_NAME: ${{ vars.RAILWAY_ENVIRONMENT_NAME }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Validate deploy configuration
+        run: |
+          test -n "$RAILWAY_TOKEN" || { echo "::error::Missing Production environment secret RAILWAY_TOKEN."; exit 1; }
+          test -n "$RAILWAY_PROJECT_ID" || { echo "::error::Missing Production environment variable RAILWAY_PROJECT_ID."; exit 1; }
+          test -n "$RAILWAY_SERVICE_ID" || { echo "::error::Missing Production environment variable RAILWAY_SERVICE_ID."; exit 1; }
+          test -n "$RAILWAY_ENVIRONMENT_NAME" || { echo "::error::Missing Production environment variable RAILWAY_ENVIRONMENT_NAME."; exit 1; }
+
+      - name: Install Rust components
+        run: rustup component add rustfmt clippy
+
+      - name: Format
+        working-directory: src/backend
+        run: cargo fmt --check
+
+      - name: Clippy
+        working-directory: src/backend
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Test
+        working-directory: src/backend
+        run: cargo test --locked
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install Railway CLI
+        run: npm install --global @railway/cli@4.30.5
+
+      - name: Deploy to Railway
+        run: |
+          railway up src/backend \
+            --path-as-root \
+            --ci \
+            --project "$RAILWAY_PROJECT_ID" \
+            --service "$RAILWAY_SERVICE_ID" \
+            --environment "$RAILWAY_ENVIRONMENT_NAME"
