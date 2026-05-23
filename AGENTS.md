@@ -10,25 +10,31 @@ compatibility.
 Agents MUST read these files before making architecture, product, security, protocol, or
 data-model decisions:
 
-1. `brain/AGENTS.md`
-2. `brain/MANIFESTO.md`
-3. `brain/PHILOSOPHY.md`
-4. `brain/PRODUCT.md`
-5. `brain/ARCHITECTURE.md`
-6. `brain/SECURITY.md`
-7. `brain/SPEED.md`
-8. `brain/PROTOCOL.md`
-9. `brain/DATA.md`
-10. `brain/COLLABORATION.md`
-11. `brain/DESIGN.md`
-12. `brain/AI.md`
-13. `brain/TESTING.md`
-14. `brain/GLOSSARY.md`
+1. `brain/README.md`
+2. `brain/engineering/AGENTS.md`
+3. `brain/product/PRD.md`
+4. `brain/product/PRFAQ.md`
+5. `brain/product/MANIFESTO.md`
+6. `brain/product/PHILOSOPHY.md`
+7. `brain/product/PRODUCT.md`
+8. `brain/engineering/ARCHITECTURE.md`
+9. `brain/engineering/SECURITY.md`
+10. `brain/operations/SPEED.md`
+11. `brain/engineering/PROTOCOL.md`
+12. `brain/engineering/DATA.md`
+13. `brain/engineering/COLLABORATION.md`
+14. `brain/design/DESIGN.md`
+15. `brain/design/REFERENCE.md`
+16. `brain/engineering/AI.md`
+17. `brain/operations/OPERATING_MODE.md`
+18. `brain/operations/TESTING.md`
+19. `brain/operations/CI_CD.md`
+20. `brain/engineering/GLOSSARY.md`
 
 For small code changes, agents MAY read only the directly relevant brain documents, but
-they MUST read `brain/SECURITY.md`, `brain/SPEED.md`, `brain/PROTOCOL.md`, and
-`brain/DATA.md` before changing permissions, realtime behavior, event payloads, or
-durable storage.
+they MUST read `brain/engineering/SECURITY.md`, `brain/operations/SPEED.md`,
+`brain/engineering/PROTOCOL.md`, and `brain/engineering/DATA.md` before changing
+permissions, realtime behavior, event payloads, or durable storage.
 
 ## Non-Negotiable Product Shape
 
@@ -46,7 +52,8 @@ The v1 platform direction is:
 - Optional Redis only when realtime must scale past one process or one region.
 
 Agents MUST NOT replace this architecture casually. Any change to the split between
-Vercel, Railway, Rust, and Neon MUST be justified against `brain/ARCHITECTURE.md`.
+Vercel, Railway, Rust, and Neon MUST be justified against
+`brain/engineering/ARCHITECTURE.md`.
 
 ## Engineering Defaults
 

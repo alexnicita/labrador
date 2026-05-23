@@ -91,7 +91,7 @@ Postgres owns durable authority:
 - Messages, comments, prompt versions, run records, files, artifacts, and audit events.
 
 Postgres MUST NOT receive every cursor movement, heartbeat, token, or keystroke. See
-`SPEED.md`.
+`../operations/SPEED.md`.
 
 ### AI Execution
 

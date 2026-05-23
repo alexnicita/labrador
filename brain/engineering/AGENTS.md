@@ -42,9 +42,10 @@ Implementation-critical docs:
 
 - `ARCHITECTURE.md` governs runtime boundaries.
 - `SECURITY.md` governs roles, capabilities, share links, and anonymous access.
-- `SPEED.md` governs realtime hot-path behavior.
+- `../operations/SPEED.md` governs realtime hot-path behavior.
 - `PROTOCOL.md` governs event names and wire shape.
 - `DATA.md` governs durable ownership and persistence.
+- `../operations/OPERATING_MODE.md` governs deadline execution discipline.
 
 ## Codebase Behavior
 
@@ -87,4 +88,4 @@ Agents MUST choose tests based on blast radius:
 - AI streaming changes require cancellation and multi-viewer behavior checks.
 - UI changes require desktop and mobile viewport review.
 
-See `TESTING.md` for the acceptance mindset.
+See `../operations/TESTING.md` for the acceptance mindset.

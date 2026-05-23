@@ -11,10 +11,10 @@ in `../../brain/`.
 
 This app is the Vercel-hosted Labrador web surface. It MUST stay aligned with:
 
-- `../../brain/ARCHITECTURE.md` for the Next.js/Vercel boundary.
-- `../../brain/DESIGN.md` for the shared-session UI shape.
-- `../../brain/SECURITY.md` for permission-aware UI and server authority.
-- `../../brain/SPEED.md` for realtime and mobile performance constraints.
+- `../../brain/engineering/ARCHITECTURE.md` for the Next.js/Vercel boundary.
+- `../../brain/design/DESIGN.md` for the shared-session UI shape.
+- `../../brain/engineering/SECURITY.md` for permission-aware UI and server authority.
+- `../../brain/operations/SPEED.md` for realtime and mobile performance constraints.
 
 The frontend MUST NOT own WebSocket room authority, durable IAM, or realtime fanout.
 Those belong to the Rust realtime service and Postgres-backed APIs described in `brain/`.

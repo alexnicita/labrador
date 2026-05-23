@@ -75,7 +75,7 @@ Frontend changes SHOULD test or manually verify:
 When changing brain docs, agents SHOULD check:
 
 - No contradiction with implementation-critical docs.
-- Terms match `GLOSSARY.md`.
+- Terms match `../engineering/GLOSSARY.md`.
 - New rules are actionable for code.
 - Cross-links point to the canonical document.
 
@@ -83,4 +83,3 @@ When changing brain docs, agents SHOULD check:
 
 A change is acceptable when the most likely regression path has been tested or explicitly
 verified. If tests cannot be run, agents MUST say why and describe the remaining risk.
-
