@@ -39,7 +39,47 @@ contains:
 ```
 
 The realtime service verifies `session.view` before joining a room and
-`session.edit_prompt` before accepting `draft.patch`.
+`session.edit_prompt` before accepting `draft.patch`. Reactions use
+`reaction.toggle` and require `session.comment`.
+
+Clients can reconnect with `?lastSeq=<seq>` to receive replayed ordered room events when
+the event is still in the room replay buffer. If the buffer no longer covers the gap, the
+server sends `room.resync_required`.
+
+## Durable Fanout
+
+Messages, comments, runs, versions, membership, and share-link changes should commit
+through the trusted HTTP/API layer first. After the durable mutation commits, trusted
+server code can fan it out to connected collaborators:
+
+```sh
+curl -X POST http://localhost:4001/internal/rooms/dev-session/events \
+  -H "authorization: Bearer $REALTIME_PUBLISH_SECRET" \
+  -H "content-type: application/json" \
+  -d '{"type":"comment.created","actorId":"user_123","payload":{"commentId":"comment_1","body":"hello"}}'
+```
+
+Supported internal event types include `message.created`, `comment.created`,
+`reaction.updated`, `run.started`, `run.delta`, `run.status`, `member.changed`,
+`share.changed`, and `version.created`.
+
+The older `/rooms/{roomId}/publish` route remains as an alias for local compatibility.
+
+## Scaling And Backpressure
+
+The server keeps hot room state in memory and uses bounded fanout queues so slow clients
+cannot stall a room. Important knobs:
+
+- `MAX_CONNECTIONS` and `MAX_ROOM_CONNECTIONS`
+- `ROOM_BROADCAST_CAPACITY` and `ROOM_REPLAY_CAPACITY`
+- `OUTBOUND_QUEUE_CAPACITY`
+- `MAX_WS_MESSAGE_BYTES` and `MAX_EVENT_PAYLOAD_BYTES`
+- `PRESENCE_EVENTS_PER_SECOND` / `PRESENCE_BURST`
+- `MUTATION_EVENTS_PER_SECOND` / `MUTATION_BURST`
+- `PING_INTERVAL_SECS`
+
+For more than one Railway realtime replica, add Redis pub/sub or an equivalent shared
+ephemeral bus so room members on different processes receive the same events.
 
 ## Railway
 
@@ -47,7 +87,8 @@ Create a Railway service from this monorepo and set:
 
 - Root directory: `src/backend`
 - Config path: `/src/backend/railway.toml`
-- Variables: `REALTIME_AUTH_JWT_SECRET`, `ALLOWED_ORIGINS`, and optional `RUST_LOG`
+- Variables: `REALTIME_AUTH_JWT_SECRET`, `ALLOWED_ORIGINS`, optional
+  `REALTIME_PUBLISH_SECRET`, and optional `RUST_LOG`
 
 Do not commit real secrets. Git should contain placeholders and deployment config only;
 Railway variables or a secret manager should contain secret values.
