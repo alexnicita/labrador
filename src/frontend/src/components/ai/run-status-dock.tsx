@@ -9,15 +9,15 @@ type RunStatusDockProps = {
 
 export function RunStatusDock({ run }: RunStatusDockProps) {
   return (
-    <div className="border-b border-[#e5ebf1] px-5 py-4">
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        <div className="flex items-center gap-3 text-[13px] font-medium text-[#151922]">
+    <div className="border-y border-[#e5ebf1] px-4 py-3 sm:px-5">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+        <div className="flex items-center gap-3 text-[13px] font-semibold text-[#151922]">
           <span className="grid size-5 place-items-center">
             <Circle className="size-3.5 fill-[#111318] text-[#111318]" aria-hidden="true" />
           </span>
           {run.label}
         </div>
-        <div className="flex flex-wrap items-center gap-x-7 gap-y-2 text-[12px]">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px]">
           {run.steps.map((step) => (
             <div
               className={cn(

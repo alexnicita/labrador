@@ -30,6 +30,9 @@ export type HumanMessage = {
   actorId: string;
   time: string;
   body: string;
+  reactions: CommentReaction[];
+  commentCount: number;
+  selected?: boolean;
 };
 
 export type CollaboratorCursor = {
@@ -71,13 +74,14 @@ export type MessagingPillar = {
 
 export type CommentReaction = {
   id: string;
-  kind: "thumbs_up" | "smile";
+  kind: "thumbs_up" | "smile" | "sparkles" | "eyes";
   count?: number;
 };
 
 export type Comment = {
   id: string;
   actorId: string;
+  targetId?: string | null;
   time: string;
   body: string;
   pinned?: boolean;
@@ -114,6 +118,9 @@ export type SessionReplicaData = {
   versions: VersionPreview[];
   branches: BranchPreview[];
   kickoffMessage: HumanMessage;
+  messages: HumanMessage[];
+  selectedMessageId: string | null;
+  selectedMessage?: HumanMessage;
   cursors: CollaboratorCursor[];
   document: {
     title: string;

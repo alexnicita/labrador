@@ -18,7 +18,7 @@ type SessionSidebarProps = {
 
 export function SessionSidebar({ data }: SessionSidebarProps) {
   return (
-    <aside className="hidden min-h-0 w-[280px] shrink-0 flex-col border-r border-[#e0e6ed] bg-[#fbfcfd]/95 px-6 py-8 lg:flex">
+    <aside className="flex h-full min-h-0 w-[250px] shrink-0 flex-col border-r border-[#dfe5eb] bg-[#fbfcfd] px-6 py-5">
       <div className="mb-8">
         <div className="grid size-8 place-items-center rounded-full text-[#111318]">
           <Sparkles className="size-6" aria-hidden="true" />

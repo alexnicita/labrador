@@ -27,21 +27,21 @@ const pillarStyles = {
 
 export function MessagingPillarCards({ pillars }: MessagingPillarCardsProps) {
   return (
-    <div className="grid gap-5 md:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-3">
       {pillars.map((pillar) => {
         const style = pillarStyles[pillar.tone];
         const Icon = style.icon;
 
         return (
           <article
-            className="min-h-[124px] rounded-[10px] border border-[#dfe5eb] bg-white p-4 shadow-[0_1px_0_rgba(13,18,28,0.02)]"
+            className="min-h-[108px] rounded-[10px] border border-[#dfe5eb] bg-white p-3.5 shadow-[0_1px_0_rgba(13,18,28,0.02)]"
             key={pillar.id}
           >
             <div className="flex items-center gap-3">
               <Icon className={cn("size-5", style.className)} aria-hidden="true" />
               <h4 className="text-[13px] font-bold text-[#111318]">{pillar.title}</h4>
             </div>
-            <p className="mt-3 text-[13px] leading-5 text-[#3c4655]">{pillar.body}</p>
+            <p className="mt-2 text-[12.5px] leading-5 text-[#3c4655]">{pillar.body}</p>
           </article>
         );
       })}

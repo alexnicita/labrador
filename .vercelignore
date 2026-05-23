@@ -1,0 +1,6 @@
+.git
+.vercel
+src/backend/target
+src/frontend/.next
+src/frontend/.playwright-cli
+src/frontend/node_modules

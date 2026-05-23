@@ -2,31 +2,45 @@ import { ChevronDown, X } from "lucide-react";
 
 import { CommentCard } from "@/components/session/comment-card";
 import { CommentComposer } from "@/components/session/comment-composer";
-import { Button } from "@/components/ui/button";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import type { Actor, SessionReplicaData } from "@/lib/session/types";
+import type { Actor, CommentReaction, SessionReplicaData } from "@/lib/session/types";
 import { cn } from "@/lib/utils";
 
 type CollaborationPanelProps = {
   data: Pick<
     SessionReplicaData,
     "actors" | "activity" | "comments" | "currentPermission" | "presence" | "session"
-  >;
+  > &
+    Pick<SessionReplicaData, "selectedMessage">;
   className?: string;
+  onCreateComment?: (body: string) => void | Promise<void>;
+  onReact?: (
+    targetId: string,
+    targetKind: "message" | "comment",
+    reactionKind: CommentReaction["kind"],
+  ) => void | Promise<void>;
 };
 
 function actorFor(actors: Actor[], actorId: string) {
   return actors.find((actor) => actor.id === actorId) ?? actors[0];
 }
 
-export function CollaborationPanel({ data, className }: CollaborationPanelProps) {
+export function CollaborationPanel({
+  data,
+  className,
+  onCreateComment,
+  onReact,
+}: CollaborationPanelProps) {
   const pinnedComment = data.comments.find((comment) => comment.pinned);
   const regularComments = data.comments.filter((comment) => !comment.pinned);
+  const createCommentHandler = onCreateComment
+    ? { onSubmit: onCreateComment }
+    : {};
 
   return (
     <aside
@@ -34,9 +48,10 @@ export function CollaborationPanel({ data, className }: CollaborationPanelProps)
         "flex min-h-0 flex-col overflow-hidden rounded-[16px] border border-[#dfe5eb] bg-white",
         className,
       )}
+      aria-label="Session collaboration"
     >
       <Tabs defaultValue="thread" className="min-h-0 flex-1 gap-0">
-        <div className="flex h-16 shrink-0 items-center border-b border-[#e4e9ef] px-4">
+        <div className="flex h-14 shrink-0 items-center border-b border-[#e4e9ef] px-4">
           <TabsList variant="line" className="h-full flex-1 justify-start gap-6 p-0">
             <TabsTrigger
               value="thread"
@@ -57,26 +72,40 @@ export function CollaborationPanel({ data, className }: CollaborationPanelProps)
               Participants ({data.session.liveCount})
             </TabsTrigger>
           </TabsList>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            className="rounded-full text-[#29313d]"
-            aria-label="Close collaboration panel"
-          >
-            <X className="size-4" aria-hidden="true" />
-          </Button>
+          <span className="grid size-8 place-items-center rounded-full text-[#202631]" aria-hidden="true">
+            <X className="size-4" />
+          </span>
         </div>
 
         <TabsContent value="thread" className="min-h-0 flex-1 overflow-hidden">
           <div className="flex h-full min-h-0 flex-col">
-            <div className="min-h-0 flex-1 overflow-y-auto px-3 py-5">
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5">
+              {data.selectedMessage ? (
+                <div className="mb-4 rounded-[10px] border border-[#dfe7f2] bg-[#f5f9ff] p-3">
+                  <p className="text-[11px] font-semibold uppercase text-[#60708a]">
+                    Commenting on
+                  </p>
+                  <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-[#1d2633]">
+                    {data.selectedMessage.body}
+                  </p>
+                </div>
+              ) : null}
+
               {pinnedComment ? (
                 <section>
                   <p className="mb-3 px-1 text-[13px] font-medium text-[#6d7788]">
                     Pinned
                   </p>
-                  <CommentCard actors={data.actors} comment={pinnedComment} />
+                  <CommentCard
+                    actors={data.actors}
+                    comment={pinnedComment}
+                    onReact={
+                      onReact
+                        ? (reactionKind) =>
+                            onReact(pinnedComment.id, "comment", reactionKind)
+                        : undefined
+                    }
+                  />
                 </section>
               ) : null}
 
@@ -91,14 +120,27 @@ export function CollaborationPanel({ data, className }: CollaborationPanelProps)
                     <ChevronDown className="size-3.5" aria-hidden="true" />
                   </button>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {regularComments.map((comment) => (
-                    <CommentCard actors={data.actors} comment={comment} key={comment.id} />
+                    <CommentCard
+                      actors={data.actors}
+                      comment={comment}
+                      key={comment.id}
+                      onReact={
+                        onReact
+                          ? (reactionKind) =>
+                              onReact(comment.id, "comment", reactionKind)
+                          : undefined
+                      }
+                    />
                   ))}
                 </div>
               </section>
             </div>
-            <CommentComposer permission={data.currentPermission} />
+            <CommentComposer
+              permission={data.currentPermission}
+              {...createCommentHandler}
+            />
           </div>
         </TabsContent>
 

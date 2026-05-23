@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { SendHorizontal, Smile } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -9,14 +9,27 @@ import type { PermissionState } from "@/lib/session/types";
 
 type CommentComposerProps = {
   permission: PermissionState;
+  onSubmit?: (body: string) => void | Promise<void>;
 };
 
-export function CommentComposer({ permission }: CommentComposerProps) {
+export function CommentComposer({ permission, onSubmit }: CommentComposerProps) {
   const [comment, setComment] = useState("");
   const disabled = !permission.canComment;
 
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const body = comment.trim();
+
+    if (disabled || !body) {
+      return;
+    }
+
+    await onSubmit?.(body);
+    setComment("");
+  }
+
   return (
-    <div className="border-t border-[#e6ebf1] bg-white p-3">
+    <form className="border-t border-[#e6ebf1] bg-white p-3" onSubmit={handleSubmit}>
       <div className="flex h-12 items-center gap-2 rounded-[10px] border border-[#e0e6ed] bg-white px-3 shadow-[0_1px_0_rgba(13,18,28,0.02)]">
         <Input
           value={comment}
@@ -37,7 +50,7 @@ export function CommentComposer({ permission }: CommentComposerProps) {
           <Smile className="size-4" aria-hidden="true" />
         </Button>
         <Button
-          type="button"
+          type="submit"
           variant="secondary"
           size="icon-sm"
           className="rounded-full"
@@ -47,6 +60,6 @@ export function CommentComposer({ permission }: CommentComposerProps) {
           <SendHorizontal className="size-3.5" aria-hidden="true" />
         </Button>
       </div>
-    </div>
+    </form>
   );
 }
