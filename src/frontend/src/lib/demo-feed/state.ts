@@ -179,6 +179,18 @@ function buildComments(rows: DemoFeedRow[], selectedMessageId: string | null): C
     }));
 }
 
+function buildCommenters(rows: DemoFeedRow[]): Actor[] {
+  const commenters = new Map<string, Actor>();
+
+  for (const row of rows) {
+    if (row.kind === "comment" && !commenters.has(row.actor.id)) {
+      commenters.set(row.actor.id, actorFromRow(row));
+    }
+  }
+
+  return Array.from(commenters.values());
+}
+
 function buildActivity(rows: DemoFeedRow[]): ActivityItem[] {
   return [...rows]
     .filter((row) => row.kind !== "reaction")
@@ -289,6 +301,7 @@ export function buildSessionReplicaData({
   const actors = uniqueActors(rows, presence);
   const messages = buildMessages(rows, selectedMessageId);
   const comments = buildComments(rows, selectedMessageId);
+  const commenters = buildCommenters(rows);
   const activePresence = buildPresence(actors, presence);
   const selectedMessage =
     messages.find((message) => message.id === selectedMessageId) ?? messages.at(-1);
@@ -309,6 +322,7 @@ export function buildSessionReplicaData({
       message: "Everyone in this public demo can prompt, comment, and react.",
     },
     actors,
+    commenters,
     presence: activePresence,
     messages,
     selectedMessageId: selectedMessage?.id ?? null,

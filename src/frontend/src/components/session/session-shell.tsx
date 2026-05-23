@@ -26,6 +26,8 @@ export function SessionShell({
   onSelectMessage,
   onReact,
 }: SessionShellProps) {
+  const headerParticipants =
+    data.commenters.length > 0 ? data.commenters : data.presence;
   const threadCount = data.comments.reduce(
     (count, comment) => count + 1 + (comment.replies?.length ?? 0),
     0,
@@ -81,8 +83,12 @@ export function SessionShell({
       rightPanel={rightPanel}
       presence={
         <PresenceCluster
-          participants={data.presence}
-          overflowCount={Math.max(data.session.liveCount - data.presence.length, 0)}
+          ariaLabel={
+            data.commenters.length > 0
+              ? "People who have commented"
+              : "Visible collaborators"
+          }
+          participants={headerParticipants}
         />
       }
       shareControl={<ShareSessionButton />}

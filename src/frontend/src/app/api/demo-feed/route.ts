@@ -4,11 +4,16 @@ import {
   createDemoAiMessage,
   createDemoComment,
   createDemoMessage,
+  getDemoMessageLimitState,
   listDemoFeedRows,
   toggleDemoReaction,
 } from "@/lib/demo-feed/db";
 import { trackUsageEvent } from "@/lib/demo-feed/clickhouse";
 import { generateDemoAiReply } from "@/lib/demo-feed/openai";
+import {
+  DEMO_MESSAGE_LIMIT_CODE,
+  isDemoMessageLimitReachedError,
+} from "@/lib/demo-feed/protection";
 import { checkDemoRateLimit } from "@/lib/demo-feed/rate-limit";
 import { publishDemoRealtimeEvent } from "@/lib/demo-feed/realtime";
 import type { DemoActor, DemoFeedRow } from "@/lib/demo-feed/types";
@@ -38,7 +43,9 @@ type DemoFeedRequest =
 
 export async function GET() {
   const rows = await listDemoFeedRows();
-  return Response.json({ rows });
+  const messageLimit = await getDemoMessageLimitState();
+
+  return Response.json({ rows, messageLimit });
 }
 
 export async function POST(request: NextRequest) {
@@ -66,10 +73,20 @@ export async function POST(request: NextRequest) {
 
   try {
     if (payload.action === "message") {
+      let messageLimit = await getDemoMessageLimitState();
+
+      if (messageLimit.reached) {
+        return Response.json(
+          { code: DEMO_MESSAGE_LIMIT_CODE, messageLimit },
+          { status: 403 },
+        );
+      }
+
       const row = await createDemoMessage({
         actor: payload.actor,
         body: payload.body,
       });
+      messageLimit = await getDemoMessageLimitState();
 
       void trackUsageEvent({
         actorId: row.actor.id,
@@ -86,16 +103,30 @@ export async function POST(request: NextRequest) {
       });
       trackRealtimePublish("message.created", row.actor.id, published);
 
-      const aiRows = await createDemoAiReplyRows({
-        actorId,
-        latestMessage: row,
-      });
+      const skipAiForMessageLimit = messageLimit.reached;
+      const aiRows = skipAiForMessageLimit
+        ? []
+        : await createDemoAiReplyRows({
+            actorId,
+            latestMessage: row,
+          });
+      messageLimit = await getDemoMessageLimitState();
 
-      if (aiRows.length > 0) {
-        return Response.json({ rows: [row, ...aiRows] });
+      if (skipAiForMessageLimit) {
+        void trackUsageEvent({
+          actorId,
+          action: "ai.reply",
+          provider: "openai",
+          status: "skipped",
+          errorCode: DEMO_MESSAGE_LIMIT_CODE,
+        });
       }
 
-      return Response.json({ row });
+      if (aiRows.length > 0) {
+        return Response.json({ rows: [row, ...aiRows], messageLimit });
+      }
+
+      return Response.json({ row, messageLimit });
     }
 
     if (payload.action === "comment") {
@@ -140,19 +171,29 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const eventType =
-      payload.targetKind === "message"
-        ? "message.reaction_changed"
-        : "comment.reaction_changed";
     const published = await publishDemoRealtimeEvent({
-      eventType,
+      eventType: "reaction.updated",
       actorId: payload.actor?.id ?? "guest",
-      payload: result,
+      payload: {
+        ...result,
+        targetKind: payload.targetKind,
+        reactionKind: payload.reactionKind,
+      },
     });
-    trackRealtimePublish(eventType, payload.actor?.id ?? "guest", published);
+    trackRealtimePublish("reaction.updated", payload.actor?.id ?? "guest", published);
 
     return Response.json(result);
   } catch (error) {
+    if (isDemoMessageLimitReachedError(error)) {
+      return Response.json(
+        {
+          code: DEMO_MESSAGE_LIMIT_CODE,
+          messageLimit: await getDemoMessageLimitState(),
+        },
+        { status: 403 },
+      );
+    }
+
     return Response.json(
       {
         code: "payload_invalid",
@@ -170,6 +211,19 @@ async function createDemoAiReplyRows({
   actorId: string;
   latestMessage: DemoFeedRow;
 }) {
+  const messageLimit = await getDemoMessageLimitState();
+
+  if (messageLimit.reached) {
+    void trackUsageEvent({
+      actorId,
+      action: "ai.reply",
+      provider: "openai",
+      status: "skipped",
+      errorCode: DEMO_MESSAGE_LIMIT_CODE,
+    });
+    return [];
+  }
+
   if (!(await checkDemoRateLimit(actorId, "ai"))) {
     void trackUsageEvent({
       actorId,
@@ -207,6 +261,42 @@ async function createDemoAiReplyRows({
       return [];
     }
 
+    let row: DemoFeedRow;
+
+    try {
+      row = await createDemoAiMessage({
+        body: result.status === "completed" ? result.body : result.message,
+        requestMessageId: latestMessage.id,
+        model: result.model,
+      });
+    } catch (error) {
+      if (!isDemoMessageLimitReachedError(error)) {
+        throw error;
+      }
+
+      void trackUsageEvent({
+        actorId,
+        runId: result.runId,
+        action: "ai.reply",
+        provider: "openai",
+        status: "skipped",
+        errorCode: DEMO_MESSAGE_LIMIT_CODE,
+      });
+
+      const statusPublished = await publishDemoRealtimeEvent({
+        eventType: "run.status",
+        actorId,
+        payload: {
+          requestMessageId: latestMessage.id,
+          runId: result.runId,
+          status: "cancelled",
+        },
+      });
+      trackRealtimePublish("run.status", actorId, statusPublished);
+
+      return [];
+    }
+
     void trackUsageEvent({
       actorId,
       runId: result.runId,
@@ -222,12 +312,6 @@ async function createDemoAiReplyRows({
         model: result.model,
         requestMessageId: latestMessage.id,
       },
-    });
-
-    const row = await createDemoAiMessage({
-      body: result.status === "completed" ? result.body : result.message,
-      requestMessageId: latestMessage.id,
-      model: result.model,
     });
 
     const messagePublished = await publishDemoRealtimeEvent({

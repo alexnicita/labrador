@@ -89,8 +89,8 @@ export function SessionWorkspaceLayout({
               </div>
             </div>
 
-            <div className="flex shrink-0 items-center gap-2">
-              <div className="hidden items-center gap-5 xl:flex">
+            <div className="flex shrink-0 items-center gap-2 sm:gap-4">
+              <div className="hidden items-center gap-4 xl:flex">
                 {presence}
                 <div className="flex h-8 items-center gap-2 text-[13px] font-semibold text-[#151922]">
                   <span className="size-2 rounded-full bg-[#19a76f]" />

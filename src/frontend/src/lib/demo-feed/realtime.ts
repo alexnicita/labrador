@@ -5,6 +5,7 @@ import { DEMO_ROOM_ID, type DemoActor } from "@/lib/demo-feed/types";
 type RealtimeEventType =
   | "message.created"
   | "comment.created"
+  | "reaction.updated"
   | "message.reaction_changed"
   | "comment.reaction_changed"
   | "run.started"
@@ -25,7 +26,7 @@ export function signDemoRealtimeToken(actor: DemoActor) {
   const payload = {
     sub: actor.id,
     sessionId: DEMO_ROOM_ID,
-    capabilities: ["session.view", "session.edit_prompt"],
+    capabilities: ["session.view", "session.comment", "session.edit_prompt"],
     displayName: actor.name,
     role: "editor",
     anonymous: false,
@@ -35,6 +36,25 @@ export function signDemoRealtimeToken(actor: DemoActor) {
   const signature = createHmac("sha256", secret).update(body).digest("base64url");
 
   return `${body}.${signature}`;
+}
+
+function publishEndpoint(serviceUrl: string) {
+  try {
+    const url = new URL(serviceUrl);
+
+    if (url.protocol === "ws:") {
+      url.protocol = "http:";
+    } else if (url.protocol === "wss:") {
+      url.protocol = "https:";
+    }
+
+    url.pathname = `${url.pathname.replace(/\/$/, "")}/internal/rooms/${DEMO_ROOM_ID}/events`;
+    url.search = "";
+
+    return url.toString();
+  } catch {
+    return `${serviceUrl.replace(/\/$/, "")}/internal/rooms/${DEMO_ROOM_ID}/events`;
+  }
 }
 
 export async function publishDemoRealtimeEvent({
@@ -54,21 +74,18 @@ export async function publishDemoRealtimeEvent({
   }
 
   try {
-    const response = await fetch(
-      `${serviceUrl.replace(/\/$/, "")}/rooms/${DEMO_ROOM_ID}/publish`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${secret}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: eventType,
-          actorId,
-          payload,
-        }),
+    const response = await fetch(publishEndpoint(serviceUrl), {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${secret}`,
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        type: eventType,
+        actorId,
+        payload,
+      }),
+    });
 
     if (!response.ok) {
       console.warn("failed to publish realtime demo event", {

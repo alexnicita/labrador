@@ -114,6 +114,7 @@ export type SessionReplicaData = {
   };
   currentPermission: PermissionState;
   actors: Actor[];
+  commenters: Actor[];
   presence: PresenceActor[];
   versions: VersionPreview[];
   branches: BranchPreview[];

@@ -3,6 +3,12 @@ import { randomUUID } from "node:crypto";
 
 import { normalizeDemoActor } from "@/lib/demo-feed/identity";
 import {
+  DEMO_AI_MESSAGE_LIMIT,
+  DEMO_COLLABORATION_URL,
+  DemoMessageLimitReachedError,
+  sanitizeDemoTextForPersistence,
+} from "@/lib/demo-feed/protection";
+import {
   DEMO_REACTION_KINDS,
   DEMO_ROOM_ID,
   type DemoActor,
@@ -23,6 +29,10 @@ type DemoFeedDbRow = {
   body: string | null;
   reaction_kind: DemoReactionKind | null;
   created_at: Date | string;
+};
+
+type DemoMessageCountRow = {
+  count: number | string;
 };
 
 type ToggleReactionResult =
@@ -53,7 +63,8 @@ function normalizeActor(actor: Partial<DemoActor> | null | undefined): DemoActor
 }
 
 function normalizeText(value: unknown, fallback: string, maxLength: number) {
-  const text = typeof value === "string" ? value.trim() : "";
+  const text =
+    typeof value === "string" ? sanitizeDemoTextForPersistence(value).trim() : "";
   return (text || fallback).slice(0, maxLength);
 }
 
@@ -74,7 +85,7 @@ function mapRow(row: DemoFeedDbRow): DemoFeedRow {
       initials: row.actor_initials,
       color: row.actor_color,
     },
-    body: row.body,
+    body: row.body ? sanitizeDemoTextForPersistence(row.body) : row.body,
     reactionKind: row.reaction_kind,
     createdAt: new Date(row.created_at).toISOString(),
   };
@@ -166,6 +177,29 @@ export async function listDemoFeedRows(roomId = DEMO_ROOM_ID) {
   return rows.map(mapRow);
 }
 
+export async function getDemoMessageLimitState(roomId = DEMO_ROOM_ID) {
+  await ensureDemoFeedTable();
+
+  const sql = getSql();
+  const [row] = (await sql`
+    select count(*)::int as count
+    from labrador_demo_feed
+    where room_id = ${roomId}
+      and kind = 'message'
+      and deleted_at is null
+  `) as DemoMessageCountRow[];
+  const count = Number(row?.count ?? 0);
+  const remaining = Math.max(DEMO_AI_MESSAGE_LIMIT - count, 0);
+
+  return {
+    count,
+    limit: DEMO_AI_MESSAGE_LIMIT,
+    remaining,
+    reached: count >= DEMO_AI_MESSAGE_LIMIT,
+    collaborationUrl: DEMO_COLLABORATION_URL,
+  };
+}
+
 export async function createDemoMessage({
   roomId = DEMO_ROOM_ID,
   actor,
@@ -185,40 +219,54 @@ export async function createDemoMessage({
   }
 
   const sql = getSql();
-  const [row] = (await sql`
-    insert into labrador_demo_feed (
-      id,
-      room_id,
-      kind,
-      actor_id,
-      actor_name,
-      actor_initials,
-      actor_color,
-      body
-    )
-    values (
-      ${randomUUID()},
-      ${roomId},
-      'message',
-      ${safeActor.id},
-      ${safeActor.name},
-      ${safeActor.initials},
-      ${safeActor.color},
-      ${safeBody}
-    )
-    returning
-      id,
-      room_id,
-      kind,
-      target_id,
-      actor_id,
-      actor_name,
-      actor_initials,
-      actor_color,
-      body,
-      reaction_kind,
-      created_at
-  `) as DemoFeedDbRow[];
+  const [, rows] = (await sql.transaction((txn) => [
+    txn`select pg_advisory_xact_lock(hashtext(${messageLimitLockKey(roomId)}))`,
+    txn`
+      insert into labrador_demo_feed (
+        id,
+        room_id,
+        kind,
+        actor_id,
+        actor_name,
+        actor_initials,
+        actor_color,
+        body
+      )
+      select
+        ${randomUUID()},
+        ${roomId},
+        'message',
+        ${safeActor.id},
+        ${safeActor.name},
+        ${safeActor.initials},
+        ${safeActor.color},
+        ${safeBody}
+      where (
+        select count(*)
+        from labrador_demo_feed
+        where room_id = ${roomId}
+          and kind = 'message'
+          and deleted_at is null
+      ) < ${DEMO_AI_MESSAGE_LIMIT}
+      returning
+        id,
+        room_id,
+        kind,
+        target_id,
+        actor_id,
+        actor_name,
+        actor_initials,
+        actor_color,
+        body,
+        reaction_kind,
+        created_at
+    `,
+  ])) as [unknown[], DemoFeedDbRow[]];
+  const row = rows[0];
+
+  if (!row) {
+    throw new DemoMessageLimitReachedError();
+  }
 
   return mapRow(row);
 }
@@ -247,44 +295,58 @@ export async function createDemoAiMessage({
     requestMessageId: requestMessageId ?? null,
     model: model ?? null,
   });
-  const [row] = (await sql`
-    insert into labrador_demo_feed (
-      id,
-      room_id,
-      kind,
-      actor_id,
-      actor_name,
-      actor_initials,
-      actor_color,
-      body,
-      metadata
-    )
-    values (
-      ${randomUUID()},
-      ${roomId},
-      'message',
-      'ai',
-      'Labrador AI',
-      'AI',
-      'gray',
-      ${safeBody},
-      ${metadata}::jsonb
-    )
-    returning
-      id,
-      room_id,
-      kind,
-      target_id,
-      actor_id,
-      actor_name,
-      actor_initials,
-      actor_color,
-      body,
-      reaction_kind,
-      created_at
-  `) as DemoFeedDbRow[];
+  const [, rows] = (await sql.transaction((txn) => [
+    txn`select pg_advisory_xact_lock(hashtext(${messageLimitLockKey(roomId)}))`,
+    txn`
+      insert into labrador_demo_feed (
+        id,
+        room_id,
+        kind,
+        actor_id,
+        actor_name,
+        actor_initials,
+        actor_color,
+        body,
+        metadata
+      )
+      select
+        ${randomUUID()},
+        ${roomId},
+        'message',
+        'ai',
+        'Labrador AI',
+        'AI',
+        'gray',
+        ${safeBody},
+        ${metadata}::jsonb
+      where (
+        select count(*)
+        from labrador_demo_feed
+        where room_id = ${roomId}
+          and kind = 'message'
+          and deleted_at is null
+      ) < ${DEMO_AI_MESSAGE_LIMIT}
+      returning
+        id,
+        room_id,
+        kind,
+        target_id,
+        actor_id,
+        actor_name,
+        actor_initials,
+        actor_color,
+        body,
+        reaction_kind,
+        created_at
+    `,
+  ])) as [unknown[], DemoFeedDbRow[]];
+  const aiRow = rows[0];
 
-  return mapRow(row);
+  if (!aiRow) {
+    throw new DemoMessageLimitReachedError();
+  }
+
+  return mapRow(aiRow);
 }
 
 export async function createDemoComment({
@@ -457,6 +519,10 @@ async function assertTargetExists(
   if (!rows[0] || !allowedKinds.includes(rows[0].kind)) {
     throw new Error("target row was not found");
   }
+}
+
+function messageLimitLockKey(roomId: string) {
+  return `labrador_demo_message_limit:${roomId}`;
 }
 
 async function seedDemoFeed(roomId: string) {

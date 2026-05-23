@@ -29,6 +29,14 @@ export type DemoFeedRow = {
   createdAt: string;
 };
 
+export type DemoMessageLimitState = {
+  count: number;
+  limit: number;
+  remaining: number;
+  reached: boolean;
+  collaborationUrl: string;
+};
+
 export type DemoPresenceMember = {
   connectionId: string;
   actorId: string;
@@ -45,4 +53,7 @@ export type DemoFeedMutationPayload = {
   row?: DemoFeedRow;
   rows?: DemoFeedRow[];
   removedId?: string;
+  messageLimit?: DemoMessageLimitState;
+  code?: string;
+  message?: string;
 };

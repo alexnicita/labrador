@@ -67,6 +67,9 @@ export const sessionReplicaData: SessionReplicaData = {
       "You can view and comment, but you don't have permission to edit or create new branches.",
   },
   actors,
+  commenters: actors.filter((actor) =>
+    ["diego", "laura", "priya", "anonymous"].includes(actor.id),
+  ),
   presence: actors
     .filter((actor) => ["marcus", "laura", "diego", "priya"].includes(actor.id))
     .map((actor) => ({ ...actor, active: true })),
