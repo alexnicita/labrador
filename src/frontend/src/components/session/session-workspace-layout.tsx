@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { ReactNode, SVGProps } from "react";
 import {
   Eye,
   Menu,
@@ -31,6 +31,61 @@ type SessionWorkspaceLayoutProps = {
   tipControl: ReactNode;
   overflowControl: ReactNode;
 };
+
+function GitHubLogo(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path
+        fillRule="evenodd"
+        d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.22.7-3.9-1.38-3.9-1.38-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.78 1.2 1.78 1.2 1.04 1.77 2.72 1.26 3.38.96.11-.75.41-1.26.74-1.55-2.57-.29-5.27-1.29-5.27-5.73 0-1.27.45-2.3 1.19-3.11-.12-.29-.52-1.47.11-3.07 0 0 .98-.31 3.18 1.19a11.08 11.08 0 0 1 5.8 0c2.2-1.5 3.17-1.19 3.17-1.19.64 1.6.24 2.78.12 3.07.74.81 1.19 1.84 1.19 3.11 0 4.45-2.71 5.43-5.29 5.72.42.36.79 1.07.79 2.16v3.2c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+function XLogo(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M13.94 10.62 20.66 3h-1.59l-5.84 6.62L8.57 3H3.2l7.05 10.02L3.2 21h1.59l6.17-6.99L15.9 21h5.37l-7.33-10.38Zm-2.18 2.47-.72-1-5.68-7.87h2.45l4.59 6.37.72 1 5.96 8.27h-2.45l-4.87-6.77Z" />
+    </svg>
+  );
+}
+
+function SocialFooter() {
+  const links = [
+    {
+      href: "https://github.com/alexnicita/labrador",
+      label: "Open Labrador on GitHub",
+      icon: <GitHubLogo className="size-4" />,
+    },
+    {
+      href: "https://x.com/NicitaAlex",
+      label: "Open NicitaAlex on X",
+      icon: <XLogo className="size-4" />,
+    },
+  ];
+
+  return (
+    <footer
+      aria-label="Labrador social links"
+      className="absolute bottom-20 right-2 z-30 flex items-center gap-1.5 rounded-full border border-white/70 bg-white/85 p-1 shadow-[0_10px_30px_rgba(31,45,61,0.14)] backdrop-blur sm:bottom-3 sm:right-4 lg:bottom-4 lg:right-5"
+    >
+      {links.map((link) => (
+        <a
+          key={link.href}
+          href={link.href}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={link.label}
+          className="grid size-7 place-items-center rounded-full text-[#242b36] transition hover:bg-[#eef3f8] hover:text-[#111318] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+        >
+          {link.icon}
+        </a>
+      ))}
+    </footer>
+  );
+}
 
 export function SessionWorkspaceLayout({
   title,
@@ -143,6 +198,7 @@ export function SessionWorkspaceLayout({
           </div>
         </div>
       </section>
+      <SocialFooter />
     </main>
   );
 }
