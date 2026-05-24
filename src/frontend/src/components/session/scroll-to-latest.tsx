@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ export function ScrollToLatest({ containerId, anchorId, watchKey }: ScrollToLate
   const [showJump, setShowJump] = useState(false);
   const mountedAtRef = useRef(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const container = document.getElementById(containerId);
     const anchor = document.getElementById(anchorId);
 
@@ -42,8 +42,12 @@ export function ScrollToLatest({ containerId, anchorId, watchKey }: ScrollToLate
     }
 
     const update = () => setShowJump(distanceFromBottom(container) > 180);
-    const settleDelays = [0, 80, 180, 360, 720, 1200];
+    const settleDelays = [80, 180, 360, 720, 1200];
     mountedAtRef.current = Date.now();
+
+    scrollToLatest(container, "auto");
+    update();
+
     const timers = settleDelays.map((delay) =>
       window.setTimeout(() => {
         scheduleScrollToLatest(container, "auto");
