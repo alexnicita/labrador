@@ -48,8 +48,12 @@ export function SessionMainThread({
         containerId={threadContainerId}
         watchKey={latestMessageKey}
       />
-      <div id={threadContainerId} className="min-h-0 flex-1 overflow-y-auto bg-white">
-        <div className="relative mx-auto w-full max-w-[880px] px-3 py-4 pb-5 sm:px-6 lg:py-3">
+      <div
+        id={threadContainerId}
+        className="flex min-h-0 flex-1 flex-col-reverse overflow-y-auto bg-white"
+        data-scroll-origin="bottom"
+      >
+        <div className="relative mx-auto w-full max-w-[880px] shrink-0 px-3 py-4 pb-5 sm:px-6 lg:py-3">
           <div className="space-y-3">
             {messages.map((message) => (
               <HumanMessage

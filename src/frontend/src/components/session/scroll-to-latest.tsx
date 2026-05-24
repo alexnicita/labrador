@@ -13,7 +13,7 @@ type ScrollToLatestProps = {
 
 function scrollToLatest(container: HTMLElement, behavior: ScrollBehavior) {
   container.scrollTo({
-    top: container.scrollHeight,
+    top: container.dataset.scrollOrigin === "bottom" ? 0 : container.scrollHeight,
     behavior,
   });
 }
@@ -26,6 +26,10 @@ function scheduleScrollToLatest(container: HTMLElement, behavior: ScrollBehavior
 }
 
 function distanceFromBottom(container: HTMLElement) {
+  if (container.dataset.scrollOrigin === "bottom") {
+    return Math.abs(container.scrollTop);
+  }
+
   return container.scrollHeight - container.scrollTop - container.clientHeight;
 }
 
