@@ -41,34 +41,34 @@ export function SessionSidebarRail({ data }: SessionSidebarRailProps) {
           const active = item.label === "Context";
 
           return (
-            <button
-              type="button"
+            <div
               className={cn(
-                "relative grid size-10 place-items-center rounded-[12px] text-[#485364] transition-colors hover:bg-[#eef2f6] hover:text-[#111318] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20",
-                index === 0 && "mb-2 border border-[#dfe5eb] bg-white text-[#111318]",
+                "relative grid size-10 cursor-default place-items-center rounded-[12px] text-[#87909d]",
+                index === 0 && "mb-2 border border-[#dfe5eb] bg-white",
                 active && "bg-[#edf3f8] text-[#111318]",
               )}
               title={item.label}
-              aria-label={item.label}
               key={item.label}
             >
               {active ? (
                 <span className="absolute left-[-13px] h-6 w-1 rounded-r-full bg-[#111318]" />
               ) : null}
               <Icon className="size-4" aria-hidden="true" />
-            </button>
+              <span className="sr-only">{item.label}</span>
+            </div>
           );
         })}
       </nav>
 
-      <button
-        type="button"
-        className="grid size-10 place-items-center rounded-[12px] text-[#485364] hover:bg-[#eef2f6] hover:text-[#111318] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+      <div
+        className="grid size-10 cursor-default place-items-center rounded-[12px] text-[#87909d]"
         title={`${data.session.anonymousViewerCount} anonymous viewers`}
-        aria-label={`${data.session.anonymousViewerCount} anonymous viewers`}
       >
         <UsersRound className="size-4" aria-hidden="true" />
-      </button>
+        <span className="sr-only">
+          {data.session.anonymousViewerCount} anonymous viewers
+        </span>
+      </div>
     </aside>
   );
 }

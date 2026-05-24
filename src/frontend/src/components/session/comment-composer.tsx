@@ -54,8 +54,9 @@ export function CommentComposer({ permission, onSubmit }: CommentComposerProps) 
           variant="ghost"
           size="icon-sm"
           className="rounded-full text-[#6f7a8b]"
-          aria-label="Add reaction"
-          disabled={disabled}
+          aria-label="Reaction picker unavailable"
+          disabled
+          title="Reaction picker is not available yet"
         >
           <Smile className="size-4" aria-hidden="true" />
         </Button>

@@ -80,13 +80,9 @@ export function SessionWorkspaceLayout({
               </Sheet>
 
               <div className="min-w-0">
-                <button
-                  type="button"
-                  className="block max-w-full truncate text-left text-[17px] font-bold tracking-[-0.01em] text-[#111318] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
-                  aria-label="Open session switcher"
-                >
+                <div className="block max-w-full cursor-default truncate text-left text-[17px] font-bold tracking-normal text-[#111318]">
                   {title}
-                </button>
+                </div>
                 <p className="text-[12px] font-medium text-[#6d7788]">{subtitle}</p>
               </div>
             </div>

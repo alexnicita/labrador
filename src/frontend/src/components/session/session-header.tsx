@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ChevronDown, Circle } from "lucide-react";
+import { Circle } from "lucide-react";
 
 import { MobileCollaborationSheet } from "@/components/session/mobile-collaboration-sheet";
 import { PresenceCluster } from "@/components/session/presence-cluster";
@@ -22,16 +22,11 @@ export function SessionHeader({
   return (
     <header className="flex min-h-20 shrink-0 items-center justify-between gap-4 border-b border-[#e0e6ed] bg-white/92 px-4 py-4 sm:px-8 lg:min-h-24">
       <div className="min-w-0">
-        <button
-          type="button"
-          className="flex max-w-full items-center gap-2 text-left"
-          aria-label="Open session switcher"
-        >
-          <h1 className="truncate text-[18px] font-bold tracking-[-0.01em] text-[#101318]">
+        <div className="flex max-w-full cursor-default items-center gap-2 text-left">
+          <h1 className="truncate text-[18px] font-bold tracking-normal text-[#101318]">
             {data.session.title}
           </h1>
-          <ChevronDown className="size-4 shrink-0 text-[#111318]" aria-hidden="true" />
-        </button>
+        </div>
         <p className="mt-1 text-[13px] font-medium text-[#7b8494]">
           {data.session.subtitle}
         </p>

@@ -20,10 +20,11 @@ export function SessionNavItem({
   className,
 }: SessionNavItemProps) {
   return (
-    <button
-      type="button"
+    <div
+      aria-current={active ? "page" : undefined}
+      aria-disabled="true"
       className={cn(
-        "flex h-9 w-full items-center gap-3 rounded-[9px] px-3 text-left text-[13px] font-medium text-[#20242d] transition-colors hover:bg-[#f1f4f7]",
+        "flex h-9 w-full cursor-default select-none items-center gap-3 rounded-[9px] px-3 text-left text-[13px] font-medium text-[#20242d]",
         active && "bg-[#eef2f7] text-[#0c0f14]",
         className,
       )}
@@ -36,6 +37,6 @@ export function SessionNavItem({
         </span>
       ) : null}
       {trailing}
-    </button>
+    </div>
   );
 }

@@ -14,9 +14,9 @@ export function BranchPreviewList({ branches }: BranchPreviewListProps) {
       </p>
       <div className="mt-4 space-y-2">
         {branches.map((branch) => (
-          <button
-            type="button"
-            className="flex h-8 w-full items-center gap-3 rounded-[8px] px-2 text-left text-[12px] font-medium text-[#26303c] transition-colors hover:bg-[#f1f4f7]"
+          <div
+            aria-disabled="true"
+            className="flex h-8 w-full cursor-default select-none items-center gap-3 rounded-[8px] px-2 text-left text-[12px] font-medium text-[#26303c]"
             key={branch.id}
           >
             <GitBranch className="size-3.5 shrink-0 text-[#6e7784]" aria-hidden="true" />
@@ -24,15 +24,15 @@ export function BranchPreviewList({ branches }: BranchPreviewListProps) {
             <span className="text-[11px] font-medium text-[#8a93a1]">
               {branch.versionCount}
             </span>
-          </button>
+          </div>
         ))}
       </div>
-      <button
-        type="button"
-        className="mt-4 w-full text-center text-[12px] font-medium text-[#596171] hover:text-[#111318]"
+      <div
+        aria-disabled="true"
+        className="mt-4 w-full cursor-default select-none text-center text-[12px] font-medium text-[#8a93a1]"
       >
         View all branches
-      </button>
+      </div>
     </div>
   );
 }

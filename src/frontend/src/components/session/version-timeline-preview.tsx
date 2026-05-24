@@ -57,12 +57,12 @@ export function VersionTimelinePreview({ versions }: VersionTimelinePreviewProps
         ))}
       </ol>
 
-      <button
-        type="button"
-        className="ml-[58px] text-[12px] font-medium text-[#586170] hover:text-[#111318]"
+      <div
+        aria-disabled="true"
+        className="ml-[58px] cursor-default select-none text-[12px] font-medium text-[#8a93a1]"
       >
         View all versions
-      </button>
+      </div>
     </div>
   );
 }

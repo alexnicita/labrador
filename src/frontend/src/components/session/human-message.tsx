@@ -81,9 +81,15 @@ export function HumanMessage({ actor, message, onComment, onReact }: HumanMessag
               return (
                 <button
                   type="button"
-                  className="inline-flex h-8 items-center gap-1.5 rounded-full border border-[#e4e9ef] bg-white px-2.5 text-[12px] font-semibold text-[#2b3340] hover:bg-[#f7f9fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+                  className={cn(
+                    "inline-flex h-8 items-center gap-1.5 rounded-full border border-[#e4e9ef] bg-white px-2.5 text-[12px] font-semibold text-[#2b3340]",
+                    onReact
+                      ? "hover:bg-[#f7f9fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+                      : "cursor-default opacity-60",
+                  )}
                   key={reactionKind}
                   aria-label={`React with ${reactionKind.replaceAll("_", " ")}`}
+                  disabled={!onReact}
                   {...(onReact ? { onClick: () => onReact(reactionKind) } : {})}
                 >
                   {reactionIcon(reactionKind)}
@@ -93,8 +99,14 @@ export function HumanMessage({ actor, message, onComment, onReact }: HumanMessag
             })}
             <button
               type="button"
-              className="inline-flex h-8 items-center gap-1.5 rounded-full border border-[#e4e9ef] bg-white px-2.5 text-[12px] font-semibold text-[#2b3340] hover:bg-[#f7f9fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+              className={cn(
+                "inline-flex h-8 items-center gap-1.5 rounded-full border border-[#e4e9ef] bg-white px-2.5 text-[12px] font-semibold text-[#2b3340]",
+                onComment
+                  ? "hover:bg-[#f7f9fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+                  : "cursor-default opacity-60",
+              )}
               aria-label={`${message.commentCount} comments`}
+              disabled={!onComment}
               {...(onComment ? { onClick: onComment } : {})}
             >
               <MessageSquareText className="size-3.5 text-[#2589ef]" aria-hidden="true" />

@@ -83,9 +83,15 @@ export function CommentCard({
               return (
                 <button
                   type="button"
-                  className="inline-flex h-8 items-center gap-1.5 rounded-full border border-[#e4e9ef] bg-white px-2.5 text-[12px] font-semibold text-[#2b3340] hover:bg-[#f7f9fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+                  className={cn(
+                    "inline-flex h-8 items-center gap-1.5 rounded-full border border-[#e4e9ef] bg-white px-2.5 text-[12px] font-semibold text-[#2b3340]",
+                    onReact
+                      ? "hover:bg-[#f7f9fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+                      : "cursor-default opacity-60",
+                  )}
                   key={reactionKind}
                   aria-label={`React with ${reactionKind.replaceAll("_", " ")}`}
+                  disabled={!onReact}
                   {...(onReact ? { onClick: () => onReact(reactionKind) } : {})}
                 >
                   {reactionIcon(reactionKind)}
@@ -93,12 +99,12 @@ export function CommentCard({
                 </button>
               );
             })}
-            <button
-              type="button"
-              className="ml-auto text-[12px] font-semibold text-[#687385] hover:text-[#111318] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+            <span
+              aria-disabled="true"
+              className="ml-auto cursor-default select-none text-[12px] font-semibold text-[#9aa3af]"
             >
               Reply
-            </button>
+            </span>
           </div>
 
           {comment.replies?.length ? (

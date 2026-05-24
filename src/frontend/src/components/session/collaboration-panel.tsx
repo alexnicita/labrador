@@ -113,13 +113,13 @@ export function CollaborationPanel({
               <section className="mt-6">
                 <div className="mb-4 flex items-center justify-between px-1">
                   <p className="text-[13px] font-medium text-[#6d7788]">All comments</p>
-                  <button
-                    type="button"
-                    className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#f3f5f8] px-3 text-[12px] font-semibold text-[#202631]"
+                  <div
+                    aria-disabled="true"
+                    className="inline-flex h-8 cursor-default select-none items-center gap-1.5 rounded-full bg-[#f3f5f8] px-3 text-[12px] font-semibold text-[#687385]"
                   >
                     Newest
                     <ChevronDown className="size-3.5" aria-hidden="true" />
-                  </button>
+                  </div>
                 </div>
                 <div className="space-y-4">
                   {regularComments.map((comment) => (
