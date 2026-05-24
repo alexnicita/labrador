@@ -241,7 +241,7 @@ export function TipLabradorButton({ trigger = "button" }: TipLabradorButtonProps
                       <button
                         key={amount.amountCents}
                         type="button"
-                        className="flex w-full min-w-0 items-center gap-3 rounded-[10px] border border-[#dfe5eb] bg-white px-3 py-3 text-left shadow-sm transition hover:bg-[#f8fafc]"
+                        className="flex w-full min-w-0 cursor-pointer items-center gap-3 rounded-[10px] border border-[#dfe5eb] bg-white px-3 py-3 text-left shadow-sm transition hover:bg-[#f8fafc]"
                         onClick={() => void copyEndpoint(amount.endpoint)}
                       >
                         <span className="shrink-0 rounded-full bg-[#e8f7ef] px-2 py-1 text-[12px] font-bold text-[#0f8a61]">

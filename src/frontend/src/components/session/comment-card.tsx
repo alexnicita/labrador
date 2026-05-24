@@ -86,7 +86,7 @@ export function CommentCard({
                   className={cn(
                     "inline-flex h-8 items-center gap-1.5 rounded-full border border-[#e4e9ef] bg-white px-2.5 text-[12px] font-semibold text-[#2b3340]",
                     onReact
-                      ? "hover:bg-[#f7f9fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
+                      ? "cursor-pointer hover:bg-[#f7f9fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111318]/20"
                       : "cursor-default opacity-60",
                   )}
                   key={reactionKind}
